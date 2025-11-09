@@ -1,0 +1,53 @@
+/* Basic styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header {
+  background-color: #ff6f61;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+header nav a {
+  color: white;
+  margin: 0 1rem;
+  text-decoration: none;
+}
+
+.menu-container, .cart-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.menu-item, .cart-item {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 5px;
+  width: calc(33% - 1rem);
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #e65c54;
+}
+
+.cart-summary {
+  margin-top: 1rem;
+  font-weight: bold;
+}
