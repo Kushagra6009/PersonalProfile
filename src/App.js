@@ -1,82 +1,53 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Service from "./pages/Service";
-import Pages from "./pages/Pages";
-import Footer from "./pages/Footer";
-import Navbarr from "./pages/Navbarr";
-import Feature from "./pages/Feature";
-import OurDoctor from "./pages/OurDoctor";
-import Appointment from "./pages/Appointment";
-import Testimonial from "./pages/Testimonial";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Portfolio from "./Portfolio";
+import './App.css';
 
-function App(){  
-return (
-  <>
+// Simple Landing Page that redirects to portfolio
+const Home = () => {
+  return (
+    <div className="landing-page">
+      <div className="landing-content">
+        <h1 className="landing-title">Welcome to My Portfolio</h1>
+        <p className="landing-subtitle">Discover my work, skills, and projects</p>
+        <a href="/portfolio" className="landing-button">
+          View Portfolio
+        </a>
+      </div>
+    </div>
+  );
+};
+
+// 404 Not Found component
+const NotFound = () => (
+  <div className="not-found">
+    <h1>404 - Page Not Found</h1>
+    <p>The page you're looking for doesn't exist.</p>
+    <div className="not-found-links">
+      <a href="/" className="not-found-link">Go to Home</a>
+      <a href="/portfolio" className="not-found-link">View Portfolio</a>
+    </div>
+  </div>
+);
+
+function App() {
+  return (
     <BrowserRouter>
       <Routes>
-        <Route path="/portfolio" element={<Portfolio/>}></Route>
-        <Route path="/" element={
-          <>
-            <Navbarr></Navbarr>
-            <Home/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/about" element={
-          <>
-            <Navbarr></Navbarr>
-            <About/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/service" element={
-          <>
-            <Navbarr></Navbarr>
-            <Service/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/pages" element={
-          <>
-            <Navbarr></Navbarr>
-            <Pages/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/feature" element={
-          <>
-            <Navbarr></Navbarr>
-            <Feature/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/doctor" element={
-          <>
-            <Navbarr></Navbarr>
-            <OurDoctor/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/appointment" element={
-          <>
-            <Navbarr></Navbarr>
-            <Appointment/>
-            <Footer/>
-          </>
-        }></Route>
-        <Route path="/testimonial" element={
-          <>
-            <Navbarr></Navbarr>
-            <Testimonial/>
-            <Footer/>
-          </>
-        }></Route>
+        {/* Home route - simple landing page */}
+        <Route path="/" element={<Home />} />
+        
+        {/* Portfolio route - main showcase */}
+        <Route path="/portfolio" element={<Portfolio />} />
+        
+        {/* Redirect /home to portfolio */}
+        <Route path="/home" element={<Navigate to="/portfolio" replace />} />
+        
+        {/* 404 - Catch all unmatched routes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
-  
-  </>
   );
 }
+
 export default App;
+

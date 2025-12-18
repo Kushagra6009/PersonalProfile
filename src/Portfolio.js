@@ -1,72 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
+import React, { useEffect, useState } from 'react';
 import './Portfolio.css';
 
 const Portfolio = () => {
-  const heroRef = useRef(null);
-  const skillsSectionRef = useRef(null);
-  const projectsSectionRef = useRef(null);
-  const experienceSectionRef = useRef(null);
-  const [activeTab, setActiveTab] = useState('all');
+  // Default to "web" since all current projects are in this category
+  const [activeTab, setActiveTab] = useState('web');
 
   useEffect(() => {
-    // Hero animation
-    const heroTimeline = gsap.timeline();
-    heroTimeline
-      .from('.hero-content h1', {
-        duration: 1,
-        y: 50,
-        opacity: 0,
-        ease: 'power3.out'
-      })
-      .from('.hero-content p', {
-        duration: 1,
-        y: 30,
-        opacity: 0,
-        ease: 'power3.out'
-      }, '-=0.7')
-      .from('.hero-buttons', {
-        duration: 1,
-        y: 30,
-        opacity: 0,
-        ease: 'power3.out'
-      }, '-=0.7')
-      .from('.hero-stats .stat-item', {
-        duration: 0.8,
-        y: 30,
-        opacity: 0,
-        stagger: 0.2,
-        ease: 'power3.out'
-      }, '-=0.5');
-
-    // Intersection Observer for scroll animations
-    const observerOptions = {
-      threshold: 0.2,
-      rootMargin: '0px 0px -50px 0px'
-    };
-
-    const animateOnScroll = (entries, observer) => {
-      entries.forEach(entry => {
+    // Fade in animations
+    const elements = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-          const elements = entry.target.querySelectorAll('.skill-item, .project-card, .experience-item');
-          gsap.from(elements, {
-            duration: 0.8,
-            y: 50,
-            opacity: 0,
-            stagger: 0.15,
-            ease: 'power3.out',
-            onComplete: () => observer.unobserve(entry.target)
-          });
+          setTimeout(() => {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+          }, index * 100);
+          observer.unobserve(entry.target);
         }
       });
-    };
+    }, { threshold: 0.1 });
 
-    const observer = new IntersectionObserver(animateOnScroll, observerOptions);
-
-    // Observe sections
-    if (skillsSectionRef.current) observer.observe(skillsSectionRef.current);
-    if (projectsSectionRef.current) observer.observe(projectsSectionRef.current);
-    if (experienceSectionRef.current) observer.observe(experienceSectionRef.current);
+    elements.forEach(el => observer.observe(el));
 
     return () => {
       observer.disconnect();
@@ -74,119 +28,59 @@ const Portfolio = () => {
   }, []);
 
   const skills = [
-    { name: 'React', level: 90, icon: '⚛️' },
-    { name: 'JavaScript', level: 95, icon: '📜' },
-    { name: 'Node.js', level: 85, icon: '🟢' },
-    { name: 'Python', level: 88, icon: '🐍' },
-    { name: 'CSS/SCSS', level: 92, icon: '🎨' },
-    { name: 'MongoDB', level: 80, icon: '🍃' },
-    { name: 'Git', level: 90, icon: '📦' },
-    { name: 'AWS', level: 75, icon: '☁️' },
+    { name: 'React', level: 90, color: '#61DAFB' },
+    { name: 'JavaScript', level: 75, color: '#F7DF1E' },
+    { name: 'HTML', level: 90, color: '#007396' },
+    { name: 'Node.js', level: 30, color: '#007396' },
+    { name: 'CSS/SCSS', level: 92, color: '#1572B6' },
+    { name: 'Tailwind CSS', level: 50, color: '#007396' },
+    { name: 'Bootstrap', level: 80, color: '#007396' },
+    { name: 'Material-UI', level: 80, color: '#007396' },
+    { name: 'Git', level: 70, color: '#007396' },
+  
   ];
 
   const projects = [
     {
       id: 1,
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce solution with payment integration, admin dashboard, and real-time inventory management.',
-      tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
-      image: '🛒',
+      title: 'E-Learning Platform',
+      description: 'Modern e-learning platform with course management, secure payments, and an admin dashboard for instructors.',
+      tech: ['React', 'Node.js', 'MongoDB'],
       category: 'web',
+      image: '🛒',
       link: '#',
       github: '#'
     },
     {
       id: 2,
-      title: 'Task Management App',
-      description: 'Collaborative task management application with real-time updates, drag-and-drop functionality, and team collaboration features.',
-      tech: ['React', 'Firebase', 'Material-UI'],
+      title: 'Student Management System',
+      description: 'Student information system that helps college faculty manage students, attendance, and records in real time.',
+      tech: ['Java', 'Spring Boot', 'MySQL'],
+      category: 'web',
       image: '📋',
-      category: 'web',
-      link: '#',
-      github: '#'
-    },
-    {
-      id: 3,
-      title: 'AI Chatbot',
-      description: 'Intelligent chatbot powered by machine learning for customer support with natural language processing capabilities.',
-      tech: ['Python', 'TensorFlow', 'Flask', 'NLP'],
-      image: '🤖',
-      category: 'ai',
-      link: '#',
-      github: '#'
-    },
-    {
-      id: 4,
-      title: 'Mobile Fitness App',
-      description: 'Cross-platform mobile application for fitness tracking with workout plans, progress monitoring, and social features.',
-      tech: ['React Native', 'Firebase', 'Redux'],
-      image: '💪',
-      category: 'mobile',
-      link: '#',
-      github: '#'
-    },
-    {
-      id: 5,
-      title: 'Data Visualization Dashboard',
-      description: 'Interactive dashboard for data analytics with real-time charts, filtering, and export capabilities.',
-      tech: ['React', 'D3.js', 'Python', 'PostgreSQL'],
-      image: '📊',
-      category: 'web',
-      link: '#',
-      github: '#'
-    },
-    {
-      id: 6,
-      title: 'Blockchain Voting System',
-      description: 'Secure voting system built on blockchain technology ensuring transparency and immutability.',
-      tech: ['Solidity', 'Web3.js', 'React', 'Ethereum'],
-      image: '⛓️',
-      category: 'blockchain',
-      link: '#',
-      github: '#'
+      link: 'https://student-information-system-zeta.vercel.app/',
+      github: 'https://github.com/iips-summer-internship-2025/Student-Information-System'
     },
   ];
+
+  const filteredProjects = activeTab === 'all'
+    ? projects
+    : projects.filter((project) => project.category === activeTab);
 
   const experiences = [
     {
-      company: 'Tech Solutions Inc.',
-      role: 'Senior Full-Stack Developer',
-      period: '2022 - Present',
-      description: 'Leading development of scalable web applications, mentoring junior developers, and implementing best practices.',
+      company: 'Internship at IIPS',
+      role: 'Frontend Developer',
+      period: 'May 2025 - July 2025',
+      description: 'Worked on a student information system for a college, focusing on a clean and responsive frontend.',
       achievements: [
-        'Increased application performance by 40%',
-        'Led team of 5 developers',
-        'Implemented CI/CD pipeline'
-      ]
-    },
-    {
-      company: 'StartupXYZ',
-      role: 'Full-Stack Developer',
-      period: '2020 - 2022',
-      description: 'Developed and maintained web applications, collaborated with cross-functional teams, and contributed to product strategy.',
-      achievements: [
-        'Built 10+ production applications',
-        'Reduced load time by 60%',
-        'Implemented microservices architecture'
-      ]
-    },
-    {
-      company: 'Freelance',
-      role: 'Web Developer',
-      period: '2018 - 2020',
-      description: 'Worked with various clients to build custom web solutions, e-commerce platforms, and responsive websites.',
-      achievements: [
-        'Delivered 50+ projects',
-        'Maintained 98% client satisfaction',
-        'Specialized in React and Node.js'
+        'Developed key frontend screens for a Student Information System used by college faculty',
+        'Implemented responsive layouts and components using React and Tailwind CSS',
+        'Collaborated with the team on UI decisions to keep the experience simple and intuitive'
       ]
     },
   ];
-
-  const filteredProjects = activeTab === 'all' 
-    ? projects 
-    : projects.filter(project => project.category === activeTab);
-
+  
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
     const element = document.querySelector(targetId);
@@ -196,270 +90,356 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="portfolio-container">
-      {/* Navigation */}
-      <nav className="portfolio-nav">
-        <div className="nav-container">
-          <div className="logo">Portfolio</div>
-          <ul className="nav-links">
-            <li><a href="#home" onClick={(e) => handleNavClick(e, '#home')}>Home</a></li>
-            <li><a href="#skills" onClick={(e) => handleNavClick(e, '#skills')}>Skills</a></li>
-            <li><a href="#projects" onClick={(e) => handleNavClick(e, '#projects')}>Projects</a></li>
-            <li><a href="#experience" onClick={(e) => handleNavClick(e, '#experience')}>Experience</a></li>
-            <li><a href="#contact" onClick={(e) => handleNavClick(e, '#contact')}>Contact</a></li>
-          </ul>
-        </div>
-      </nav>
+    <div className="portfolio-new">
+      <div className="layout-shell">
+        {/* Side Rail Navigation */}
+        <aside className="side-rail">
+          <div className="side-brand">
+            <div className="side-logo">KS</div>
+            <div className="side-meta">
+              <span className="side-name">Kushagra Singh Bais</span>
+              <span className="side-role">Frontend Developer</span>
+            </div>
+          </div>
 
-      {/* Hero Section */}
-      <section id="home" className="hero-section" ref={heroRef}>
-        <div className="hero-background">
-          <div className="gradient-orb orb-1"></div>
-          <div className="gradient-orb orb-2"></div>
-          <div className="gradient-orb orb-3"></div>
-        </div>
-        <div className="hero-content">
-          <div className="hero-badge">
-            <span>👋 Hello, I'm</span>
-          </div>
-          <h1>
-            <span className="gradient-text">Full-Stack Developer</span>
-            <br />
-            & Creative Problem Solver
-          </h1>
-          <p>
-            I build exceptional digital experiences through clean code, 
-            innovative solutions, and attention to detail.
-          </p>
-          <div className="hero-buttons">
-            <a href="#projects" className="btn btn-primary" onClick={(e) => handleNavClick(e, '#projects')}>View My Work</a>
-            <a href="#contact" className="btn btn-secondary" onClick={(e) => handleNavClick(e, '#contact')}>Get In Touch</a>
-          </div>
-          <div className="hero-stats">
-            <div className="stat-item">
-              <div className="stat-number">50+</div>
-              <div className="stat-label">Projects</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">5+</div>
-              <div className="stat-label">Years Experience</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">30+</div>
-              <div className="stat-label">Clients</div>
-            </div>
-          </div>
-        </div>
-        <div className="scroll-indicator">
-          <span>Scroll Down</span>
-          <div className="scroll-arrow">↓</div>
-        </div>
-      </section>
+          <nav className="side-nav">
+            <button onClick={(e) => handleNavClick(e, '#home')} className="side-nav-link">
+              <span className="side-nav-dot" /> Home
+            </button>
+            <button onClick={(e) => handleNavClick(e, '#about')} className="side-nav-link">
+              <span className="side-nav-dot" /> About
+            </button>
+            <button onClick={(e) => handleNavClick(e, '#skills')} className="side-nav-link">
+              <span className="side-nav-dot" /> Skills
+            </button>
+            <button onClick={(e) => handleNavClick(e, '#projects')} className="side-nav-link">
+              <span className="side-nav-dot" /> Projects
+            </button>
+            <button onClick={(e) => handleNavClick(e, '#experience')} className="side-nav-link">
+              <span className="side-nav-dot" /> Experience
+            </button>
+            <button onClick={(e) => handleNavClick(e, '#contact')} className="side-nav-link">
+              <span className="side-nav-dot" /> Contact
+            </button>
+          </nav>
 
-      {/* Skills Section */}
-      <section id="skills" className="skills-section" ref={skillsSectionRef}>
-        <div className="section-container">
-          <h2 className="section-title">
-            <span className="section-number">01.</span>
-            Skills & Technologies
-          </h2>
-          <p className="section-subtitle">
-            Technologies I work with to bring ideas to life
-          </p>
-          <div className="skills-grid">
-            {skills.map((skill, index) => (
-              <div key={index} className="skill-item">
-                <div className="skill-header">
-                  <span className="skill-icon">{skill.icon}</span>
-                  <span className="skill-name">{skill.name}</span>
-                  <span className="skill-percentage">{skill.level}%</span>
+          <div className="side-footer">
+            <div className="side-location">Based in India</div>
+            <div className="side-socials">
+              <a href="https://github.com/Kushagra6009" target="_blank" rel="noopener noreferrer">
+                GH
+              </a>
+              <a
+                href="https://www.linkedin.com/in/kushagra-singh-638175317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                IN
+              </a>
+              <a href="mailto:kushagrasingh6009@gmail.com" target="_blank" rel="noopener noreferrer">
+                Mail
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Scroll Area */}
+        <main className="content-rail">
+          {/* Hero Section */}
+          <section id="home" className="section-panel hero-panel">
+            <div className="hero-inner">
+              <div className="hero-text-new">
+                <span className="hero-greeting">Hi, I'm</span>
+                <h1 className="hero-name">
+                  <span className="name-first">Kushagra Singh</span>
+                  <span className="name-last">Bais</span>
+                </h1>
+                <h2 className="hero-title">I design motion‑rich experiences for the web.</h2>
+                <p className="hero-description">
+                  I'm a frontend-focused developer who loves crafting smooth, animated interfaces with React, modern CSS,
+                  and clean, maintainable code. I enjoy turning ideas into polished products that feel fast, intuitive,
+                  and visually satisfying.
+                </p>
+                <div className="hero-buttons-new">
+                  <a
+                    href="#projects"
+                    className="btn-new btn-primary-new"
+                    onClick={(e) => handleNavClick(e, '#projects')}
+                  >
+                    View My Work
+                  </a>
+                  <a
+                    href="#contact"
+                    className="btn-new btn-outline-new"
+                    onClick={(e) => handleNavClick(e, '#contact')}
+                  >
+                    Get In Touch
+                  </a>
                 </div>
-                <div className="skill-bar">
-                  <div 
-                    className="skill-progress" 
-                    style={{ width: `${skill.level}%` }}
-                  ></div>
+
+                <div className="hero-stats-row">
+                  <div className="hero-stat">
+                    <span className="hero-stat-number">{projects.length}+</span>
+                    <span className="hero-stat-label">Projects</span>
+                  </div>
+                  <div className="hero-stat">
+                    <span className="hero-stat-number">{skills.length}</span>
+                    <span className="hero-stat-label">Core Skills</span>
+                  </div>
+                  <div className="hero-stat">
+                    <span className="hero-stat-number">2025</span>
+                    <span className="hero-stat-label">Internship @ IIPS</span>
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="projects-section" ref={projectsSectionRef}>
-        <div className="section-container">
-          <h2 className="section-title">
-            <span className="section-number">02.</span>
-            Featured Projects
-          </h2>
-          <p className="section-subtitle">
-            A selection of my recent work and side projects
-          </p>
-          
-          <div className="project-filters">
-            <button 
-              className={activeTab === 'all' ? 'active' : ''}
-              onClick={() => setActiveTab('all')}
-            >
-              All
-            </button>
-            <button 
-              className={activeTab === 'web' ? 'active' : ''}
-              onClick={() => setActiveTab('web')}
-            >
-              Web
-            </button>
-            <button 
-              className={activeTab === 'mobile' ? 'active' : ''}
-              onClick={() => setActiveTab('mobile')}
-            >
-              Mobile
-            </button>
-            <button 
-              className={activeTab === 'ai' ? 'active' : ''}
-              onClick={() => setActiveTab('ai')}
-            >
-              AI/ML
-            </button>
-            <button 
-              className={activeTab === 'blockchain' ? 'active' : ''}
-              onClick={() => setActiveTab('blockchain')}
-            >
-              Blockchain
-            </button>
-          </div>
-
-          <div className="projects-grid">
-            {filteredProjects.map((project) => (
-              <div key={project.id} className="project-card">
-                <div className="project-image">
-                  <div className="project-emoji">{project.image}</div>
-                </div>
-                <div className="project-content">
-                  <h3>{project.title}</h3>
-                  <p>{project.description}</p>
-                  <div className="project-tech">
-                    {project.tech.map((tech, index) => (
-                      <span key={index} className="tech-tag">{tech}</span>
+              <div className="hero-orbit">
+                <div className="hero-orbit-card fade-in">
+                  <div className="hero-orbit-title">Currently crafting</div>
+                  <div className="hero-orbit-main">{projects[1]?.title}</div>
+                  <p className="hero-orbit-desc">
+                    {projects[1]?.description}
+                  </p>
+                  <div className="hero-orbit-tags">
+                    {projects[1]?.tech.map((t) => (
+                      <span key={t}>{t}</span>
                     ))}
                   </div>
-                  <div className="project-links">
-                    <a href={project.link} className="project-link" target="_blank" rel="noopener noreferrer">
-                      <span>🔗</span> Live Demo
-                    </a>
-                    <a href={project.github} className="project-link" target="_blank" rel="noopener noreferrer">
-                      <span>📂</span> GitHub
-                    </a>
-                  </div>
                 </div>
+                <div className="hero-orbit-ring hero-orbit-ring-one" />
+                <div className="hero-orbit-ring hero-orbit-ring-two" />
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
 
-      {/* Experience Section */}
-      <section id="experience" className="experience-section" ref={experienceSectionRef}>
-        <div className="section-container">
-          <h2 className="section-title">
-            <span className="section-number">03.</span>
-            Work Experience
-          </h2>
-          <p className="section-subtitle">
-            My professional journey and career milestones
-          </p>
-          <div className="experience-timeline">
-            {experiences.map((exp, index) => (
-              <div key={index} className="experience-item">
-                <div className="experience-marker"></div>
-                <div className="experience-content">
-                  <div className="experience-header">
-                    <h3>{exp.role}</h3>
-                    <span className="experience-company">{exp.company}</span>
-                    <span className="experience-period">{exp.period}</span>
-                  </div>
-                  <p>{exp.description}</p>
-                  <ul className="experience-achievements">
-                    {exp.achievements.map((achievement, idx) => (
-                      <li key={idx}>✓ {achievement}</li>
-                    ))}
-                  </ul>
-                </div>
+          {/* About Section */}
+          <section id="about" className="section-panel about-panel">
+            <div className="about-grid">
+              <div className="about-text-new fade-in">
+                <h2 className="section-title-new">
+                  <span className="title-number">01.</span>
+                  About Me
+                </h2>
+                <p>
+                  Hello! I'm a frontend developer who enjoys turning complex ideas into simple, beautiful interfaces.
+                  I love experimenting with animations, micro-interactions, and modern UI patterns that make products
+                  feel alive and engaging.
+                </p>
+                <p>
+                  My focus is on writing clean, reusable code and building experiences that are fast, accessible,
+                  and look great on any screen size.
+                </p>
+                <p>Here are a few of the technologies I've been working with recently:</p>
+                <ul className="tech-list">
+                  <li>JavaScript (ES6+)</li>
+                  <li>React</li>
+                  <li>Node.js</li>
+                  <li>TypeScript</li>
+                  <li>Java</li>
+                  <li>MongoDB</li>
+                </ul>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="contact-section">
-        <div className="section-container">
-          <h2 className="section-title">
-            <span className="section-number">04.</span>
-            Get In Touch
-          </h2>
-          <p className="section-subtitle">
-            I'm always open to discussing new projects, creative ideas, or opportunities to be part of your visions.
-          </p>
-          <div className="contact-content">
-            <div className="contact-info">
-              <div className="contact-item">
-                <span className="contact-icon">📧</span>
-                <div>
-                  <h4>Email</h4>
-                  <p>your.email@example.com</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <span className="contact-icon">📱</span>
-                <div>
-                  <h4>Phone</h4>
-                  <p>+1 (555) 123-4567</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <span className="contact-icon">📍</span>
-                <div>
-                  <h4>Location</h4>
-                  <p>San Francisco, CA</p>
+              <div className="about-image-new fade-in">
+                <div className="image-wrapper">
+                  <div className="image-placeholder">KS</div>
                 </div>
               </div>
             </div>
-            <div className="contact-form">
-              <form>
-                <div className="form-group">
-                  <input type="text" placeholder="Your Name" required />
-                </div>
-                <div className="form-group">
-                  <input type="email" placeholder="Your Email" required />
-                </div>
-                <div className="form-group">
-                  <input type="text" placeholder="Subject" required />
-                </div>
-                <div className="form-group">
-                  <textarea placeholder="Your Message" rows="5" required></textarea>
-                </div>
-                <button type="submit" className="btn btn-primary">Send Message</button>
-              </form>
-            </div>
-          </div>
-          <div className="social-links">
-            <a href="#" className="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="#" className="social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="#" className="social-link" target="_blank" rel="noopener noreferrer">Twitter</a>
-            <a href="#" className="social-link" target="_blank" rel="noopener noreferrer">Instagram</a>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Footer */}
-      <footer className="portfolio-footer">
-        <p>&copy; 2024 Portfolio. Designed with ❤️</p>
-      </footer>
+          {/* Skills Section */}
+          <section id="skills" className="section-panel skills-panel">
+            <div className="container-new">
+              <h2 className="section-title-new">
+                <span className="title-number">02.</span>
+                Skills & Expertise
+              </h2>
+              <div className="skills-grid-new">
+                {skills.map((skill, index) => (
+                  <div key={index} className="skill-card-new fade-in">
+                    <div className="skill-header-new">
+                      <h3>{skill.name}</h3>
+                      <span className="skill-percent">{skill.level}%</span>
+                    </div>
+                    <div className="skill-bar-wrapper">
+                      <div
+                        className="skill-bar-fill"
+                        style={{
+                          width: `${skill.level}%`,
+                          backgroundColor: skill.color
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Projects Section */}
+          <section id="projects" className="section-panel projects-panel">
+            <div className="container-new">
+              <h2 className="section-title-new">
+                <span className="title-number">03.</span>
+                Selected Projects
+              </h2>
+              <div className="project-filters-new">
+                {['all', 'web', 'mobile', 'ai', 'blockchain'].map((tab) => (
+                  <button
+                    key={tab}
+                    className={activeTab === tab ? 'filter-btn active' : 'filter-btn'}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                  </button>
+                ))}
+              </div>
+              <div className="projects-grid-new">
+                {filteredProjects.length === 0 ? (
+                  <p>No projects available for this category yet.</p>
+                ) : (
+                  filteredProjects.map((project) => (
+                    <div key={project.id} className="project-card-new fade-in">
+                      <div className="project-header-new">
+                        <div className="project-icon">{project.image}</div>
+                        <div className="project-links-new">
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-link-icon"
+                          >
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                          </a>
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="project-link-icon"
+                          >
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                            >
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                              <polyline points="15 3 21 3 21 9"></polyline>
+                              <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                          </a>
+                        </div>
+                      </div>
+                      <h3 className="project-title-new">{project.title}</h3>
+                      <p className="project-description-new">{project.description}</p>
+                      <div className="project-tags-new">
+                        {project.tech.map((tech, idx) => (
+                          <span key={idx} className="project-tag">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Experience Section */}
+          <section id="experience" className="section-panel experience-panel">
+            <div className="container-new">
+              <h2 className="section-title-new">
+                <span className="title-number">04.</span>
+                Where I've Worked
+              </h2>
+              <div className="experience-timeline-new">
+                {experiences.map((exp, index) => (
+                  <div key={index} className="experience-item-new fade-in">
+                    <div className="experience-header-new">
+                      <h3>{exp.role}</h3>
+                      <span className="experience-company-new">@{exp.company}</span>
+                    </div>
+                    <span className="experience-period-new">{exp.period}</span>
+                    <ul className="experience-list-new">
+                      {exp.achievements.map((achievement, idx) => (
+                        <li key={idx}>{achievement}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Contact Section */}
+          <section id="contact" className="section-panel contact-panel">
+            <div className="container-new">
+              <h2 className="section-title-new contact-title">
+                <span className="title-number">05.</span>
+                Get In Touch
+              </h2>
+              <p className="contact-text-new">
+                I'm currently looking for new opportunities and interesting collaborations. Whether you have a question
+                about a project, want feedback on something you're building, or just want to say hi, my inbox is open.
+              </p>
+              <a href="mailto:kushagra6009@gmail.com" className="btn-new btn-primary-new contact-btn">
+                Say Hello
+              </a>
+              <div className="social-links-new">
+                <a
+                  href="https://github.com/Kushagra6009"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link-new"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/kushagra-singh-638175317?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link-new"
+                >
+                  LinkedIn
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer" className="social-link-new">
+                  Twitter
+                </a>
+                <a
+                  href="mailto:kushagrasingh6009@gmail.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link-new"
+                >
+                  Email
+                </a>
+              </div>
+            </div>
+          </section>
+
+          {/* Footer
+          <footer className="footer-new">
+            <div className="container-new">
+              <p>Designed & Built by Kushagra Singh Bais</p>
+              <p className="footer-year">© {new Date().getFullYear()}</p>
+            </div>
+          </footer> */}
+        </main>
+      </div>
     </div>
   );
 };
 
 export default Portfolio;
-
